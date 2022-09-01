@@ -42,7 +42,8 @@ export default defineComponent({
 }
 
 .questions-container{
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  margin: 0px 10px;
 }
 </style>

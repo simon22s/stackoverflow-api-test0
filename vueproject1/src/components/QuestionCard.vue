@@ -1,7 +1,7 @@
 <template>
-  <div class="card" @click="onExpandQuestion">
+  <div class="card" :class="{ unexpandedCard: !isExpanded }" @click="onExpandQuestion">
     {{question.title}}
-    <div class="questions-container">
+    <div class="answers-container">
       <button v-for="item in answers"
               v-html=item.body
               :key="item.id"
@@ -31,13 +31,29 @@ export default defineComponent({
   data() {
     return {
       answers,
-      selectedAnswerId: -1
+      selectedAnswerId: -1,
+      isExpanded: false
     }
   },
   methods: {
     async onExpandQuestion() {
-      const stackOverflowService = new StackOverflowService();
-      this.answers = await stackOverflowService.getAnswersForQuestion(this.question!.id);
+      // only expand once
+      if (!this.isExpanded) {
+        const stackOverflowService = new StackOverflowService();
+        // shuffle the answers each time
+        this.answers = this.shuffleArray(await stackOverflowService.getAnswersForQuestion(this.question!.id));
+        this.isExpanded = true;
+      }
+    },
+    shuffleArray(data: Answer[]) {
+      let j, x, i;
+      for (i = data.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = data[i];
+        data[i] = data[j];
+        data[j] = x;
+      }
+      return data;
     },
     onAnswerSelected(selectedId: number) {
       // buttons should be disabled after selectiom but add a second check just in case
@@ -75,6 +91,10 @@ export default defineComponent({
     margin: 5px 0px;
 }
 
+.unexpandedCard {
+  cursor: pointer;
+}
+
 .answerButton {
   padding: 3px;
   margin: 2px;
@@ -92,5 +112,10 @@ export default defineComponent({
 .unacceptedAnswer{
   border-color: red;
   background-color: lightcoral;
+}
+
+.answers-container {
+  display: flex;
+  flex-direction: column;
 }
 </style>
