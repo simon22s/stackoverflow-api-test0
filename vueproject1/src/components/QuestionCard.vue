@@ -2,9 +2,13 @@
   <div class="card" @click="onExpandQuestion">
     {{question.title}}
     <div class="questions-container">
-      <button class="answer-button" v-for="item in answers"
+      <button v-for="item in answers"
               v-html=item.body
-              :key="item.id"></button>
+              :key="item.id"
+              @click="onAnswerSelected(item.id)"
+              :class="getButtonStyle(item.id)"
+              :disabled='selectedAnswerId != -1'>
+      </button>
     </div>
   </div>
 </template>
@@ -26,13 +30,29 @@ export default defineComponent({
   },
   data() {
     return {
-      answers
+      answers,
+      selectedAnswerId: -1
     }
   },
   methods: {
     async onExpandQuestion() {
       const stackOverflowService = new StackOverflowService();
       this.answers = await stackOverflowService.getAnswersForQuestion(this.question!.id);
+    },
+    onAnswerSelected(selectedId: number) {
+      // buttons should be disabled after selectiom but add a second check just in case
+      // if selectedAnswerId is no longer -1, that means the user has already made a selection and shouldn't be allowed to select again
+      if (this.selectedAnswerId == -1) {
+        this.selectedAnswerId = selectedId;
+      }
+    },
+    getButtonStyle(answerId: number) {  // return the classes to assign to the button based on its id
+      return {
+        answerButton: true,
+        selectedButton: this.selectedAnswerId == answerId,
+        acceptedAnswer: this.selectedAnswerId != - 1 && this.answers.find(x => x.id == answerId)?.isAccepted, // if selectedAnswerId is -1, user has not chosen an answer yet
+        unacceptedAnswer: this.selectedAnswerId != - 1 && !this.answers.find(x => x.id == answerId)?.isAccepted
+      }
     }
   }
 });
@@ -55,8 +75,22 @@ export default defineComponent({
     margin: 5px 0px;
 }
 
-.answer-button{
+.answerButton {
   padding: 3px;
   margin: 2px;
+}
+
+.selectedButton{
+  border: 5px solid;
+}
+
+.acceptedAnswer{
+  border-color: green;
+  background-color: lightgreen;
+}
+
+.unacceptedAnswer{
+  border-color: red;
+  background-color: lightcoral;
 }
 </style>

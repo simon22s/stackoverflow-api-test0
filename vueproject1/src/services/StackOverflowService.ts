@@ -4,12 +4,15 @@ import { AnswersResponseDto, AnswersResponse } from '@/models/AnswersResponse';
 
 export class StackOverflowService {
     public async getQuestions() {
-        // stack overflow api doesn't seem to take any parameters for filtering unanswered questions
-        // so just grab the default list (excluding full answer models for now) and filter it afterwards
-        const response = QuestionsResponse.createFromData((await axios.get<QuestionsResponseDto>('https://api.stackexchange.com/2.3/questions?order=desc&sort=hot&site=stackoverflow')).data);
+        // stack overflow api doesn't seem to take any parameters for filtering out unanswered questions
+        // currently set sort to week to fetch a decent volume of questions with accepted answers
+        // so just grab the default list (without fetching full answer models for now) and filter it afterwards
+
+        // further improvements: find a way to fetch a configurable number of questions with accepted answers
+        const response = QuestionsResponse.createFromData((await axios.get<QuestionsResponseDto>('https://api.stackexchange.com/2.3/questions?order=desc&sort=week&site=stackoverflow')).data);
 
         // return a list of those that are answered, and have multiple possible answers
-        return response.questions.filter(x => x.answerCount > 1 && x.isAnswered);
+        return response.questions.filter(x => x.answerCount > 1 && x.hasAcceptedAnswer);
     }
 
     public async getAnswersForQuestion(questionId: number) {

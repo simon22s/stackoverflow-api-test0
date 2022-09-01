@@ -1,11 +1,8 @@
-import { Answer, AnswerDto } from '@/models/Answer'
-
 export interface QuestionDto {
     question_id: number;
     title: string;
     answer_count: number;
-    is_answered: boolean;
-    answers: AnswerDto[];
+    accepted_answer_id: number;
 }
 
 export class Question {
@@ -15,10 +12,7 @@ export class Question {
         question.id = data.question_id;
         question.title = data.title;
         question.answerCount = data.answer_count;
-        question.isAnswered = data.is_answered;
-
-        // answer array can be empty
-        question.answers = data.answers ? data.answers.map(x => Answer.createFromData(x)) : [];
+        question.hasAcceptedAnswer = data.accepted_answer_id !== undefined;
 
         return question;
     }
@@ -26,6 +20,5 @@ export class Question {
     id: number = -1;
     title: string = '';
     answerCount: number = 0;
-    isAnswered: boolean = false;
-    answers: Answer[] = [];
+    hasAcceptedAnswer: boolean = false;
 }

@@ -10,12 +10,14 @@ export class Answer {
 
         answer.id = data.answer_id;
         answer.body = data.body;
+
+        // further improvements: move knowledge of accepted answer from frontend to backend to obscure it from client
         answer.isAccepted = data.is_accepted;
 
         return answer;
     }
 
     id: number = -1;
-    body: string = 'Hello World';
+    body: string = '';
     isAccepted: boolean = false;
 }
