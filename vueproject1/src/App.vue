@@ -25,8 +25,12 @@ export default defineComponent({
     }
   },
   async created() {
-    const stackOverflowService = new StackOverflowService();
-    this.questions = await stackOverflowService.getQuestions();
+    try {
+      const stackOverflowService = new StackOverflowService();
+      this.questions = await stackOverflowService.getQuestions();
+    } catch (exception) {
+      console.log("Could not fetch recent questions: " + exception)
+    }
   }
 });
 </script>
@@ -44,6 +48,6 @@ export default defineComponent({
 .questions-container{
   display: flex;
   flex-direction: column;
-  margin: 0px 10px;
+  margin: 0 10%;
 }
 </style>

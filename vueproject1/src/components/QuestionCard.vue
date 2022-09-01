@@ -37,12 +37,16 @@ export default defineComponent({
   },
   methods: {
     async onExpandQuestion() {
-      // only expand once
-      if (!this.isExpanded) {
-        const stackOverflowService = new StackOverflowService();
-        // shuffle the answers each time
-        this.answers = this.shuffleArray(await stackOverflowService.getAnswersForQuestion(this.question!.id));
-        this.isExpanded = true;
+      try {
+        // only expand once
+        if (!this.isExpanded) {
+          const stackOverflowService = new StackOverflowService();
+          // shuffle the answers each time
+          this.answers = this.shuffleArray(await stackOverflowService.getAnswersForQuestion(this.question!.id));
+          this.isExpanded = true;
+        }
+      } catch (exception) {
+        console.log("Could not fetch answers for question id: " + this.question?.id + ", error message: " + exception);
       }
     },
     shuffleArray(data: Answer[]) {
@@ -85,10 +89,10 @@ export default defineComponent({
 }
 
 .card {
-    border: 1px solid;
-    border-radius: 8px;
-    padding: 5px;
-    margin: 5px 0px;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 5px;
+  margin: 5px 0px;
 }
 
 .unexpandedCard {
@@ -98,6 +102,8 @@ export default defineComponent({
 .answerButton {
   padding: 3px;
   margin: 2px;
+  overflow: hidden;
+  border-radius: 4px;
 }
 
 .selectedButton{
