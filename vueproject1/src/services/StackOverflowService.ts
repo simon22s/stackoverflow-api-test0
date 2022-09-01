@@ -8,8 +8,8 @@ export class StackOverflowService {
         // so just grab the default list (excluding full answer models for now) and filter it afterwards
         const response = QuestionsResponse.createFromData((await axios.get<QuestionsResponseDto>('https://api.stackexchange.com/2.3/questions?order=desc&sort=hot&site=stackoverflow')).data);
 
-        // return a list of those that are answered
-        return response.questions.filter(x => x.answerCount > 0 && x.isAnswered);
+        // return a list of those that are answered, and have multiple possible answers
+        return response.questions.filter(x => x.answerCount > 1 && x.isAnswered);
     }
 
     public async getAnswersForQuestion(questionId: number) {
