@@ -1,4 +1,10 @@
-# vueproject1
+# stackoverflow-api-test
+Repository can be pulled down and built in Visual Studio 2022.
+
+# Prerequisites:
+- Node.js development in Visual Studio 2022
+- NPM
+- Vue CLI
 
 ## Project setup
 ```
