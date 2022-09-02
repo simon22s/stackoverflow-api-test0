@@ -40,9 +40,8 @@ export default defineComponent({
       try {
         // only expand once
         if (!this.isExpanded) {
-          const stackOverflowService = new StackOverflowService();
           // shuffle the answers each time
-          this.answers = this.shuffleArray(await stackOverflowService.getAnswersForQuestion(this.question!.id));
+          this.answers = this.shuffleArray(await StackOverflowService.getAnswersForQuestion(this.question!.id));
           this.isExpanded = true;
         }
       } catch (exception) {

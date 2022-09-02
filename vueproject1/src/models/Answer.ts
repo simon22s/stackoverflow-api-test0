@@ -11,7 +11,7 @@ export class Answer {
         answer.id = data.answer_id;
         answer.body = data.body;
 
-        // further improvements: move knowledge of accepted answer from frontend to backend to obscure it from client
+        // potential further improvements: add a backend server to move knowledge of accepted answer from frontend to that service to obscure it from client
         answer.isAccepted = data.is_accepted;
 
         return answer;

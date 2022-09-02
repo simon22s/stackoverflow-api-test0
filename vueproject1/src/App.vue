@@ -26,8 +26,7 @@ export default defineComponent({
   },
   async created() {
     try {
-      const stackOverflowService = new StackOverflowService();
-      this.questions = await stackOverflowService.getQuestions();
+      this.questions = await StackOverflowService.getQuestions();
     } catch (exception) {
       console.log("Could not fetch recent questions: " + exception)
     }
